@@ -56,6 +56,21 @@ Com todo o meu amor e gratidão.`
     api?.scrollNext();
   };
 
+  const handleVisitsKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      const ageInput = document.getElementById('age') as HTMLInputElement;
+      if (ageInput) {
+        ageInput.focus();
+      }
+    }
+  };
+
+  const handleAgeKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && visitsPerYear && parentsAge) {
+      calculateVisits();
+    }
+  };
+
   React.useEffect(() => {
     if (!api) return;
 
@@ -73,12 +88,12 @@ Com todo o meu amor e gratidão.`
           {/* Progress indicators */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center space-x-4">
-              {[0, 1, 2, 3].map((step) => (
+              {[0, 1, 2].map((step) => (
                 <div key={step} className="flex items-center">
                   <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                     current >= step ? 'bg-primary' : 'bg-muted'
                   }`} />
-                  {step < 3 && <div className="w-8 h-0.5 bg-muted mx-2" />}
+                  {step < 2 && <div className="w-8 h-0.5 bg-muted mx-2" />}
                 </div>
               ))}
             </div>
@@ -140,6 +155,7 @@ Com todo o meu amor e gratidão.`
                         type="number"
                         value={visitsPerYear}
                         onChange={(e) => setVisitsPerYear(e.target.value)}
+                        onKeyPress={handleVisitsKeyPress}
                         placeholder="Ex: 12"
                         className="text-lg p-4 border-input focus:border-ring focus:ring-ring"
                       />
@@ -157,6 +173,7 @@ Com todo o meu amor e gratidão.`
                         type="number"
                         value={parentsAge}
                         onChange={(e) => setParentsAge(e.target.value)}
+                        onKeyPress={handleAgeKeyPress}
                         placeholder="Ex: 65"
                         className="text-lg p-4 border-input focus:border-ring focus:ring-ring"
                       />
@@ -176,7 +193,7 @@ Com todo o meu amor e gratidão.`
                 </Card>
               </CarouselItem>
 
-              {/* Slide 3: Results */}
+              {/* Slide 3: Results and Share Message */}
               <CarouselItem>
                 <Card className="card-gradient border-border shadow-lg">
                   <CardContent className="text-center p-12">
@@ -199,62 +216,32 @@ Com todo o meu amor e gratidão.`
                         agradecer e mostrar o quanto amamos quem nos trouxe ao mundo. 💖"
                       </p>
                     </div>
-                    <Button 
-                      onClick={nextSlide}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full"
-                    >
-                      Ver Mensagem
-                    </Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-
-              {/* Slide 4: Share Message */}
-              <CarouselItem>
-                <Card className="card-gradient border-border shadow-lg">
-                  <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
-                      <Heart className="h-12 w-12 text-primary animate-pulse-heart" />
-                    </div>
-                    <CardTitle className="text-xl md:text-2xl text-foreground">
-                      Fale agora, antes que não dê mais tempo
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6 pb-12">
-                    <div className="bg-secondary p-6 rounded-2xl text-foreground leading-relaxed">
-                      <p className="mb-4">
-                        <strong>Queridos pais,</strong>
-                      </p>
-                      <p className="mb-4">
-                        Eu não consigo expressar em palavras o quanto amo vocês. Cada momento, cada ensinamento, cada gesto de carinho… tudo o que fazem por mim é algo que guardarei para sempre no meu coração. A presença de vocês em minha vida é uma verdadeira bênção, e me sinto honrado todos os dias por ser filho de pessoas tão especiais.
-                      </p>
-                      <p className="mb-4">
-                        Vocês são essenciais para minha felicidade e meu crescimento. Não há nada que eu queira mais do que retribuir o amor e a dedicação que sempre me deram. Agradeço a Deus todos os dias por ter me abençoado com pais tão maravilhosos como vocês.
-                      </p>
-                      <p className="mb-4">
-                        Que Deus continue abençoando a vida de vocês, trazendo sempre saúde, paz e alegria. Eu sou eternamente grato por tudo o que significam para mim e por tudo o que fizeram e fazem para que eu seja quem sou.
-                      </p>
-                      <p>
-                        <strong>Com todo o meu amor e gratidão.</strong>
-                      </p>
-                    </div>
                     
-                    <Button
-                      onClick={shareOnWhatsApp}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full flex items-center justify-center gap-3"
-                    >
-                      <MessageCircle className="h-5 w-5" />
-                      Compartilhar no WhatsApp
-                    </Button>
-
-                    <div className="text-center pt-8">
-                      <div className="animate-gentle-float mb-4">
-                        ✨
+                    <div className="space-y-6">
+                      <div className="flex justify-center mb-4">
+                        <Heart className="h-12 w-12 text-primary animate-pulse-heart" />
                       </div>
-                      <p className="text-lg text-foreground leading-relaxed italic">
-                        "Aproveite cada visita, cada abraço, cada conversa. 
-                        O amor nunca tem prazo de validade."
-                      </p>
+                      <h3 className="text-xl md:text-2xl text-foreground mb-4">
+                        Fale agora, antes que não dê mais tempo
+                      </h3>
+                      
+                      <Button
+                        onClick={shareOnWhatsApp}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full flex items-center justify-center gap-3"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        Compartilhar no WhatsApp
+                      </Button>
+
+                      <div className="text-center pt-8">
+                        <div className="animate-gentle-float mb-4">
+                          ✨
+                        </div>
+                        <p className="text-lg text-foreground leading-relaxed italic">
+                          "Aproveite cada visita, cada abraço, cada conversa. 
+                          O amor nunca tem prazo de validade."
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -265,7 +252,7 @@ Com todo o meu amor e gratidão.`
             {current > 0 && (
               <CarouselPrevious className="left-4 bg-card border-border hover:bg-secondary" />
             )}
-            {current < 3 && (
+            {current < 2 && (
               <CarouselNext 
                 className="right-4 bg-card border-border hover:bg-secondary"
                 onClick={current === 1 ? calculateVisits : undefined}
