@@ -5,82 +5,82 @@
 
 @layer base {
   :root {
-    --background: 252 249 246;
-    --foreground: 105 77 56;
+    --background: 250 249 246;
+    --foreground: 64 48 39;
 
-    --card: 249 241 235;
-    --card-foreground: 105 77 56;
+    --card: 255 253 250;
+    --card-foreground: 64 48 39;
 
-    --popover: 249 241 235;
-    --popover-foreground: 105 77 56;
+    --popover: 255 253 250;
+    --popover-foreground: 64 48 39;
 
-    --primary: 198 109 61;
-    --primary-foreground: 254 251 248;
+    --primary: 139 69 19;
+    --primary-foreground: 255 253 250;
 
-    --secondary: 242 229 218;
-    --secondary-foreground: 129 95 70;
+    --secondary: 245 237 230;
+    --secondary-foreground: 92 64 51;
 
-    --muted: 242 229 218;
-    --muted-foreground: 157 117 87;
+    --muted: 245 237 230;
+    --muted-foreground: 120 85 69;
 
-    --accent: 233 166 117;
-    --accent-foreground: 105 77 56;
+    --accent: 194 154 108;
+    --accent-foreground: 64 48 39;
 
     --destructive: 220 38 38;
-    --destructive-foreground: 254 251 248;
+    --destructive-foreground: 255 253 250;
 
-    --border: 233 214 197;
-    --input: 233 214 197;
-    --ring: 198 109 61;
+    --border: 229 216 202;
+    --input: 229 216 202;
+    --ring: 139 69 19;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 249 241 235;
-    --sidebar-foreground: 105 77 56;
-    --sidebar-primary: 198 109 61;
-    --sidebar-primary-foreground: 254 251 248;
-    --sidebar-accent: 242 229 218;
-    --sidebar-accent-foreground: 129 95 70;
-    --sidebar-border: 233 214 197;
-    --sidebar-ring: 198 109 61;
+    --sidebar-background: 255 253 250;
+    --sidebar-foreground: 64 48 39;
+    --sidebar-primary: 139 69 19;
+    --sidebar-primary-foreground: 255 253 250;
+    --sidebar-accent: 245 237 230;
+    --sidebar-accent-foreground: 92 64 51;
+    --sidebar-border: 229 216 202;
+    --sidebar-ring: 139 69 19;
   }
 
   .dark {
-    --background: 105 77 56;
-    --foreground: 254 251 248;
+    --background: 64 48 39;
+    --foreground: 255 253 250;
 
-    --card: 129 95 70;
-    --card-foreground: 254 251 248;
+    --card: 92 64 51;
+    --card-foreground: 255 253 250;
 
-    --popover: 129 95 70;
-    --popover-foreground: 254 251 248;
+    --popover: 92 64 51;
+    --popover-foreground: 255 253 250;
 
-    --primary: 254 251 248;
-    --primary-foreground: 105 77 56;
+    --primary: 255 253 250;
+    --primary-foreground: 64 48 39;
 
-    --secondary: 157 117 87;
-    --secondary-foreground: 254 251 248;
+    --secondary: 120 85 69;
+    --secondary-foreground: 255 253 250;
 
-    --muted: 157 117 87;
-    --muted-foreground: 233 214 197;
+    --muted: 120 85 69;
+    --muted-foreground: 229 216 202;
 
-    --accent: 157 117 87;
-    --accent-foreground: 254 251 248;
+    --accent: 120 85 69;
+    --accent-foreground: 255 253 250;
 
     --destructive: 239 68 68;
-    --destructive-foreground: 254 251 248;
+    --destructive-foreground: 255 253 250;
 
-    --border: 157 117 87;
-    --input: 157 117 87;
-    --ring: 233 166 117;
-    --sidebar-background: 129 95 70;
-    --sidebar-foreground: 254 251 248;
-    --sidebar-primary: 233 166 117;
-    --sidebar-primary-foreground: 105 77 56;
-    --sidebar-accent: 157 117 87;
-    --sidebar-accent-foreground: 254 251 248;
-    --sidebar-border: 157 117 87;
-    --sidebar-ring: 233 166 117;
+    --border: 120 85 69;
+    --input: 120 85 69;
+    --ring: 194 154 108;
+    --sidebar-background: 92 64 51;
+    --sidebar-foreground: 255 253 250;
+    --sidebar-primary: 194 154 108;
+    --sidebar-primary-foreground: 64 48 39;
+    --sidebar-accent: 120 85 69;
+    --sidebar-accent-foreground: 255 253 250;
+    --sidebar-border: 120 85 69;
+    --sidebar-ring: 194 154 108;
   }
 }
 
@@ -94,19 +94,15 @@
   }
 }
 
-/* Gradient backgrounds */
-.sunset-gradient {
-  background: linear-gradient(135deg, 
-    hsl(var(--background)) 0%, 
-    hsl(254 245 237) 25%, 
-    hsl(251 233 218) 50%, 
-    hsl(247 217 194) 75%, 
-    hsl(241 193 157) 100%);
-}
-
+/* Soft gradient backgrounds */
 .warm-gradient {
   background: linear-gradient(135deg, 
-    hsl(249 241 235) 0%, 
-    hsl(242 229 218) 50%, 
-    hsl(233 214 197) 100%);
+    hsl(var(--background)) 0%, 
+    hsl(var(--card)) 100%);
+}
+
+.card-gradient {
+  background: linear-gradient(135deg, 
+    hsl(var(--card)) 0%, 
+    hsl(var(--secondary)) 100%);
 }

@@ -1,30 +1,41 @@
 
-import React, { useState } from 'react';
-import { Heart, Clock, MessageCircle, Share2 } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Heart, Clock, MessageCircle, Share2, Hourglass, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 const Index = () => {
-  const [step, setStep] = useState(1);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
   const [visitsPerYear, setVisitsPerYear] = useState('');
   const [parentsAge, setParentsAge] = useState('');
   const [personalMessage, setPersonalMessage] = useState('');
   const [calculatedVisits, setCalculatedVisits] = useState(0);
   const [estimatedAge, setEstimatedAge] = useState(0);
 
-  const calculateVisits = () => {
-    const avgLifeExpectancy = 82; // média brasileira
+  const calculateVisits = useCallback(() => {
+    const avgLifeExpectancy = 82;
     const currentAge = parseInt(parentsAge);
     const yearsRemaining = Math.max(0, avgLifeExpectancy - currentAge);
     const totalVisits = yearsRemaining * parseInt(visitsPerYear);
     
     setCalculatedVisits(totalVisits);
     setEstimatedAge(avgLifeExpectancy);
-    setStep(3);
-  };
+    
+    // Move to next slide
+    api?.scrollNext();
+  }, [parentsAge, visitsPerYear, api]);
 
   const shareOnWhatsApp = () => {
     const message = encodeURIComponent(
@@ -33,178 +44,222 @@ const Index = () => {
     window.open(`https://wa.me/?text=${message}`, '_blank');
   };
 
+  const nextSlide = () => {
+    if (current === 1 && (!visitsPerYear || !parentsAge)) return;
+    api?.scrollNext();
+  };
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
-    <div className="min-h-screen sunset-gradient relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 animate-gentle-float">
-          <Heart className="h-8 w-8 text-sunset-400" />
-        </div>
-        <div className="absolute top-40 right-20 animate-gentle-float" style={{ animationDelay: '2s' }}>
-          <Clock className="h-6 w-6 text-sunset-500" />
-        </div>
-        <div className="absolute bottom-40 left-20 animate-gentle-float" style={{ animationDelay: '4s' }}>
-          <Heart className="h-10 w-10 text-sunset-300" />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        {step === 1 && (
-          <div className="max-w-2xl mx-auto text-center animate-fade-in">
-            <div className="mb-8">
-              <Heart className="h-16 w-16 text-sunset-600 mx-auto mb-6 animate-pulse-heart" />
-              <h1 className="text-4xl md:text-5xl font-bold text-sunset-800 mb-6 leading-tight">
-                Tempo com os Pais
-              </h1>
-              <p className="text-lg md:text-xl text-sunset-700 leading-relaxed max-w-xl mx-auto">
-                Cada momento com quem amamos é precioso. Vamos refletir juntos sobre o tempo que nos resta com nossos pais.
-              </p>
+    <div className="min-h-screen warm-gradient">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Progress indicators */}
+          <div className="flex justify-center mb-8">
+            <div className="flex items-center space-x-4">
+              {[0, 1, 2, 3].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                    current >= step ? 'bg-primary' : 'bg-muted'
+                  }`} />
+                  {step < 3 && <div className="w-8 h-0.5 bg-muted mx-2" />}
+                </div>
+              ))}
             </div>
-            
-            <Card className="warm-gradient border-sunset-200 shadow-xl animate-scale-in" style={{ animationDelay: '0.3s' }}>
-              <CardContent className="p-8">
-                <Button 
-                  onClick={() => setStep(2)}
-                  className="bg-sunset-600 hover:bg-sunset-700 text-white px-8 py-3 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-                >
-                  Começar Reflexão
-                </Button>
-              </CardContent>
-            </Card>
           </div>
-        )}
 
-        {step === 2 && (
-          <div className="max-w-2xl mx-auto animate-slide-up">
-            <Card className="warm-gradient border-sunset-200 shadow-xl">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl md:text-3xl text-sunset-800 mb-4">
-                  Conte-nos um pouco sobre suas visitas
-                </CardTitle>
-                <p className="text-sunset-700">
-                  As visitas não têm preço, mas cada uma delas é um tesouro.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                <div className="space-y-3">
-                  <Label htmlFor="visits" className="text-sunset-800 font-medium text-lg">
-                    Quantas vezes você visita seus pais por ano?
-                  </Label>
-                  <Input
-                    id="visits"
-                    type="number"
-                    value={visitsPerYear}
-                    onChange={(e) => setVisitsPerYear(e.target.value)}
-                    placeholder="Ex: 12"
-                    className="text-lg p-4 border-sunset-300 focus:border-sunset-500 focus:ring-sunset-500"
-                  />
-                  <p className="text-sm text-sunset-600 italic">
-                    O tempo com eles é único e não volta mais...
-                  </p>
-                </div>
+          <Carousel 
+            className="w-full"
+            setApi={setApi}
+            opts={{
+              align: "start",
+              loop: false,
+            }}
+          >
+            <CarouselContent>
+              {/* Slide 1: Welcome */}
+              <CarouselItem>
+                <Card className="card-gradient border-border shadow-lg">
+                  <CardContent className="flex flex-col items-center justify-center min-h-[500px] text-center p-12">
+                    <div className="animate-gentle-float mb-8">
+                      <Hourglass className="h-20 w-20 text-primary animate-pulse-heart" />
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+                      Tempo com os Pais
+                    </h1>
+                    <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
+                      Cada momento com quem amamos é precioso. Vamos refletir juntos sobre o tempo que nos resta com nossos pais.
+                    </p>
+                    <Button 
+                      onClick={nextSlide}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full"
+                    >
+                      Começar Reflexão
+                    </Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
 
-                <div className="space-y-3">
-                  <Label htmlFor="age" className="text-sunset-800 font-medium text-lg">
-                    Qual a idade de seus pais? (ou a média, se tiverem idades diferentes)
-                  </Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    value={parentsAge}
-                    onChange={(e) => setParentsAge(e.target.value)}
-                    placeholder="Ex: 65"
-                    className="text-lg p-4 border-sunset-300 focus:border-sunset-500 focus:ring-sunset-500"
-                  />
-                  <p className="text-sm text-sunset-600 italic">
-                    Cada ano é uma benção compartilhada...
-                  </p>
-                </div>
+              {/* Slide 2: Input Form */}
+              <CarouselItem>
+                <Card className="card-gradient border-border shadow-lg">
+                  <CardHeader className="text-center pb-6">
+                    <div className="flex justify-center mb-4">
+                      <Clock className="h-12 w-12 text-primary animate-gentle-float" />
+                    </div>
+                    <CardTitle className="text-2xl md:text-3xl text-foreground">
+                      Suas Visitas
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Conte-nos sobre seus encontros com seus pais
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-8 pb-12">
+                    <div className="space-y-3">
+                      <Label htmlFor="visits" className="text-foreground font-medium text-lg">
+                        Quantas vezes você visita seus pais por ano?
+                      </Label>
+                      <Input
+                        id="visits"
+                        type="number"
+                        value={visitsPerYear}
+                        onChange={(e) => setVisitsPerYear(e.target.value)}
+                        placeholder="Ex: 12"
+                        className="text-lg p-4 border-input focus:border-ring focus:ring-ring"
+                      />
+                      <p className="text-sm text-muted-foreground italic">
+                        Cada visita é um tesouro...
+                      </p>
+                    </div>
 
-                <Button 
-                  onClick={calculateVisits}
-                  disabled={!visitsPerYear || !parentsAge}
-                  className="w-full bg-sunset-600 hover:bg-sunset-700 text-white py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50"
-                >
-                  Calcular Momentos Restantes
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                    <div className="space-y-3">
+                      <Label htmlFor="age" className="text-foreground font-medium text-lg">
+                        Qual a idade de seus pais? (ou a média)
+                      </Label>
+                      <Input
+                        id="age"
+                        type="number"
+                        value={parentsAge}
+                        onChange={(e) => setParentsAge(e.target.value)}
+                        placeholder="Ex: 65"
+                        className="text-lg p-4 border-input focus:border-ring focus:ring-ring"
+                      />
+                      <p className="text-sm text-muted-foreground italic">
+                        Cada ano é uma benção...
+                      </p>
+                    </div>
 
-        {step === 3 && (
-          <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
-            <Card className="warm-gradient border-sunset-200 shadow-xl text-center">
-              <CardContent className="p-8">
-                <Heart className="h-12 w-12 text-sunset-600 mx-auto mb-6 animate-pulse-heart" />
-                <h2 className="text-2xl md:text-3xl font-bold text-sunset-800 mb-6">
-                  Reflexão sobre o Tempo
-                </h2>
-                <div className="text-6xl md:text-8xl font-bold text-sunset-700 mb-4 animate-scale-in">
-                  {calculatedVisits}
-                </div>
-                <p className="text-lg md:text-xl text-sunset-700 mb-6 leading-relaxed">
-                  Você ainda pode visitar seus pais aproximadamente <strong>{calculatedVisits} vezes</strong>, 
-                  considerando uma expectativa de vida até os {estimatedAge} anos.
-                </p>
-                <div className="bg-sunset-100 p-6 rounded-2xl border-l-4 border-sunset-500">
-                  <p className="text-sunset-800 italic text-lg leading-relaxed">
-                    "O tempo é nosso bem mais valioso. Cada momento é uma oportunidade de dar carinho, 
-                    agradecer e mostrar o quanto amamos quem nos trouxe ao mundo. Não deixe o tempo 
-                    passar sem deixar suas memórias e seu amor por eles. 💖"
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                    <Button 
+                      onClick={calculateVisits}
+                      disabled={!visitsPerYear || !parentsAge}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg rounded-full disabled:opacity-50"
+                    >
+                      Calcular Momentos
+                    </Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
 
-            <Card className="warm-gradient border-sunset-200 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-xl md:text-2xl text-sunset-800 flex items-center gap-3">
-                  <MessageCircle className="h-6 w-6" />
-                  Mensagem para seus Pais
-                </CardTitle>
-                <p className="text-sunset-700">
-                  Diga aos seus pais o quanto os ama e o quanto você é grato por tudo o que fizeram por você.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Textarea
-                  value={personalMessage}
-                  onChange={(e) => setPersonalMessage(e.target.value)}
-                  placeholder="Queridos pais, vocês são..."
-                  className="min-h-32 text-lg p-4 border-sunset-300 focus:border-sunset-500 focus:ring-sunset-500"
-                />
-                
-                {personalMessage && (
-                  <Button
-                    onClick={shareOnWhatsApp}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
-                  >
-                    <Share2 className="h-5 w-5" />
-                    Compartilhar no WhatsApp
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+              {/* Slide 3: Results */}
+              <CarouselItem>
+                <Card className="card-gradient border-border shadow-lg">
+                  <CardContent className="text-center p-12">
+                    <div className="animate-gentle-float mb-6">
+                      <Hourglass className="h-16 w-16 text-primary mx-auto animate-pulse-heart" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+                      Reflexão sobre o Tempo
+                    </h2>
+                    <div className="text-6xl md:text-8xl font-bold text-primary mb-6 animate-scale-in">
+                      {calculatedVisits}
+                    </div>
+                    <p className="text-lg md:text-xl text-foreground mb-8 leading-relaxed">
+                      Você ainda pode visitar seus pais aproximadamente <strong>{calculatedVisits} vezes</strong>, 
+                      considerando uma expectativa de vida até os {estimatedAge} anos.
+                    </p>
+                    <div className="bg-secondary p-6 rounded-2xl border-l-4 border-primary mb-8">
+                      <p className="text-foreground italic text-lg leading-relaxed">
+                        "O tempo é nosso bem mais valioso. Cada momento é uma oportunidade de dar carinho, 
+                        agradecer e mostrar o quanto amamos quem nos trouxe ao mundo. 💖"
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={nextSlide}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full"
+                    >
+                      Escrever Mensagem
+                    </Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
 
-            <Card className="warm-gradient border-sunset-200 shadow-xl text-center">
-              <CardContent className="p-8">
-                <div className="mb-6">
-                  <div className="inline-block animate-gentle-float">
-                    ✨
-                  </div>
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-sunset-800 mb-4">
-                  Uma Reflexão Final
-                </h3>
-                <p className="text-lg text-sunset-700 leading-relaxed italic">
-                  "Aproveite cada visita, cada abraço, cada conversa. 
-                  O amor nunca tem prazo de validade."
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              {/* Slide 4: Message & Share */}
+              <CarouselItem>
+                <Card className="card-gradient border-border shadow-lg">
+                  <CardHeader className="text-center">
+                    <div className="flex justify-center mb-4">
+                      <Heart className="h-12 w-12 text-primary animate-pulse-heart" />
+                    </div>
+                    <CardTitle className="text-xl md:text-2xl text-foreground">
+                      Mensagem para seus Pais
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      Expresse seu amor e gratidão
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-6 pb-12">
+                    <Textarea
+                      value={personalMessage}
+                      onChange={(e) => setPersonalMessage(e.target.value)}
+                      placeholder="Queridos pais, vocês são..."
+                      className="min-h-32 text-lg p-4 border-input focus:border-ring focus:ring-ring"
+                    />
+                    
+                    {personalMessage && (
+                      <Button
+                        onClick={shareOnWhatsApp}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full flex items-center justify-center gap-3"
+                      >
+                        <Share2 className="h-5 w-5" />
+                        Compartilhar no WhatsApp
+                      </Button>
+                    )}
+
+                    <div className="text-center pt-8">
+                      <div className="animate-gentle-float mb-4">
+                        ✨
+                      </div>
+                      <p className="text-lg text-foreground leading-relaxed italic">
+                        "Aproveite cada visita, cada abraço, cada conversa. 
+                        O amor nunca tem prazo de validade."
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+
+            {/* Navigation */}
+            {current > 0 && (
+              <CarouselPrevious className="left-4 bg-card border-border hover:bg-secondary" />
+            )}
+            {current < 3 && (
+              <CarouselNext 
+                className="right-4 bg-card border-border hover:bg-secondary"
+                onClick={current === 1 ? calculateVisits : undefined}
+              />
+            )}
+          </Carousel>
+        </div>
       </div>
     </div>
   );
