@@ -91,18 +91,20 @@
 
   body {
     @apply bg-background text-foreground font-lora;
+    background-color: rgb(252, 251, 248) !important;
+    color: rgb(75, 65, 58) !important;
   }
 }
 
 /* Soft gradient backgrounds */
 .warm-gradient {
   background: linear-gradient(135deg, 
-    hsl(var(--background)) 0%, 
-    hsl(var(--secondary)) 100%);
+    rgb(252, 251, 248) 0%, 
+    rgb(246, 243, 238) 100%) !important;
 }
 
 .card-gradient {
   background: linear-gradient(135deg, 
-    hsl(var(--card)) 0%, 
-    hsl(var(--muted)) 100%);
+    rgb(255, 254, 252) 0%, 
+    rgb(248, 245, 241) 100%) !important;
 }
