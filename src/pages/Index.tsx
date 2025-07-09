@@ -20,7 +20,6 @@ const Index = () => {
   const [current, setCurrent] = useState(0);
   const [visitsPerYear, setVisitsPerYear] = useState('');
   const [parentsAge, setParentsAge] = useState('');
-  const [personalMessage, setPersonalMessage] = useState('');
   const [calculatedVisits, setCalculatedVisits] = useState(0);
   const [estimatedAge, setEstimatedAge] = useState(0);
 
@@ -39,9 +38,17 @@ const Index = () => {
 
   const shareOnWhatsApp = () => {
     const message = encodeURIComponent(
-      `💖 Uma mensagem especial para vocês:\n\n${personalMessage}\n\n✨ Calculei que ainda posso visitá-los aproximadamente ${calculatedVisits} vezes. Cada momento é precioso!\n\nCom todo meu amor ❤️`
+      `Queridos pais,
+
+Eu não consigo expressar em palavras o quanto amo vocês. Cada momento, cada ensinamento, cada gesto de carinho… tudo o que fazem por mim é algo que guardarei para sempre no meu coração. A presença de vocês em minha vida é uma verdadeira bênção, e me sinto honrado todos os dias por ser filho de pessoas tão especiais.
+
+Vocês são essenciais para minha felicidade e meu crescimento. Não há nada que eu queira mais do que retribuir o amor e a dedicação que sempre me deram. Agradeço a Deus todos os dias por ter me abençoado com pais tão maravilhosos como vocês.
+
+Que Deus continue abençoando a vida de vocês, trazendo sempre saúde, paz e alegria. Eu sou eternamente grato por tudo o que significam para mim e por tudo o que fizeram e fazem para que eu seja quem sou.
+
+Com todo o meu amor e gratidão.`
     );
-    window.open(`https://wa.me/?text=${message}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
   };
 
   const nextSlide = () => {
@@ -196,13 +203,13 @@ const Index = () => {
                       onClick={nextSlide}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full"
                     >
-                      Escrever Mensagem
+                      Ver Mensagem
                     </Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
 
-              {/* Slide 4: Message & Share */}
+              {/* Slide 4: Share Message */}
               <CarouselItem>
                 <Card className="card-gradient border-border shadow-lg">
                   <CardHeader className="text-center">
@@ -210,29 +217,35 @@ const Index = () => {
                       <Heart className="h-12 w-12 text-primary animate-pulse-heart" />
                     </div>
                     <CardTitle className="text-xl md:text-2xl text-foreground">
-                      Mensagem para seus Pais
+                      Fale agora, antes que não dê mais tempo
                     </CardTitle>
-                    <p className="text-muted-foreground">
-                      Expresse seu amor e gratidão
-                    </p>
                   </CardHeader>
                   <CardContent className="space-y-6 pb-12">
-                    <Textarea
-                      value={personalMessage}
-                      onChange={(e) => setPersonalMessage(e.target.value)}
-                      placeholder="Queridos pais, vocês são..."
-                      className="min-h-32 text-lg p-4 border-input focus:border-ring focus:ring-ring"
-                    />
+                    <div className="bg-secondary p-6 rounded-2xl text-foreground leading-relaxed">
+                      <p className="mb-4">
+                        <strong>Queridos pais,</strong>
+                      </p>
+                      <p className="mb-4">
+                        Eu não consigo expressar em palavras o quanto amo vocês. Cada momento, cada ensinamento, cada gesto de carinho… tudo o que fazem por mim é algo que guardarei para sempre no meu coração. A presença de vocês em minha vida é uma verdadeira bênção, e me sinto honrado todos os dias por ser filho de pessoas tão especiais.
+                      </p>
+                      <p className="mb-4">
+                        Vocês são essenciais para minha felicidade e meu crescimento. Não há nada que eu queira mais do que retribuir o amor e a dedicação que sempre me deram. Agradeço a Deus todos os dias por ter me abençoado com pais tão maravilhosos como vocês.
+                      </p>
+                      <p className="mb-4">
+                        Que Deus continue abençoando a vida de vocês, trazendo sempre saúde, paz e alegria. Eu sou eternamente grato por tudo o que significam para mim e por tudo o que fizeram e fazem para que eu seja quem sou.
+                      </p>
+                      <p>
+                        <strong>Com todo o meu amor e gratidão.</strong>
+                      </p>
+                    </div>
                     
-                    {personalMessage && (
-                      <Button
-                        onClick={shareOnWhatsApp}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full flex items-center justify-center gap-3"
-                      >
-                        <Share2 className="h-5 w-5" />
-                        Compartilhar no WhatsApp
-                      </Button>
-                    )}
+                    <Button
+                      onClick={shareOnWhatsApp}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg rounded-full flex items-center justify-center gap-3"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                      Compartilhar no WhatsApp
+                    </Button>
 
                     <div className="text-center pt-8">
                       <div className="animate-gentle-float mb-4">
