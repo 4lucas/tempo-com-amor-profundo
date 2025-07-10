@@ -108,3 +108,32 @@
     rgb(255, 254, 252) 0%, 
     rgb(248, 245, 241) 100%) !important;
 }
+
+/* Tema fixo para garantir cores corretas em todos os dispositivos */
+body {
+  background-color: white !important;
+  color: black !important;
+}
+
+/* Força as variáveis se estiverem mal definidas */
+:root {
+  --background: 0 0% 100% !important;         /* branco */
+  --foreground: 0 0% 0% !important;           /* preto */
+  --card: 0 0% 100% !important;
+  --card-foreground: 0 0% 0% !important;
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 0 0% 0% !important;
+  --primary: 0 0% 0% !important;
+  --primary-foreground: 0 0% 100% !important;
+  --secondary: 0 0% 90% !important;
+  --secondary-foreground: 0 0% 10% !important;
+  --muted: 0 0% 95% !important;
+  --muted-foreground: 0 0% 40% !important;
+  --accent: 0 0% 80% !important;
+  --accent-foreground: 0 0% 20% !important;
+  --destructive: 0 100% 50% !important;
+  --destructive-foreground: 0 0% 100% !important;
+  --border: 0 0% 20% !important;
+  --input: 0 0% 20% !important;
+  --ring: 0 0% 20% !important;
+}
